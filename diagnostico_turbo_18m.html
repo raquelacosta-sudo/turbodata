@@ -1,0 +1,1003 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Top 20 Turbo · 18 Meses · Raquel Acosta</title>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
+<style>
+:root{
+  --rappi:#FF6900;--red:#EF4444;--red-bg:#fef2f2;--orange:#F97316;--orange-bg:#fff7ed;
+  --yellow:#EAB308;--yellow-bg:#fefce8;--green:#22C55E;--green-bg:#f0fdf4;
+  --blue:#3B82F6;--blue-bg:#eff6ff;--purple:#8B5CF6;--purple-bg:#f5f3ff;
+  --dark:#0F172A;--mid:#64748B;--border:#E2E8F0;--bg:#F8FAFC;--card:#fff;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:var(--bg);color:var(--dark);font-size:13px}
+.hdr{background:var(--dark);color:#fff;padding:14px 28px;display:flex;justify-content:space-between;align-items:center}
+.hdr h1{font-size:16px;font-weight:700}
+.hdr small{color:#94A3B8;font-size:11px;display:block;margin-top:2px}
+.badge{background:var(--rappi);color:#fff;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:700}
+
+.wrap{max-width:1480px;margin:0 auto;padding:20px}
+
+/* TABS */
+.tabs{display:flex;gap:3px;border-bottom:2px solid var(--border);margin-bottom:18px}
+.tab{padding:8px 14px;font-size:12px;font-weight:600;cursor:pointer;border:none;background:none;color:var(--mid);border-radius:6px 6px 0 0}
+.tab.on{background:var(--card);color:var(--dark);border:1px solid var(--border);border-bottom:2px solid #fff;margin-bottom:-2px}
+.pane{display:none}.pane.on{display:block}
+
+/* KPI BAR */
+.kpis{display:grid;grid-template-columns:repeat(6,1fr);gap:10px;margin-bottom:18px}
+.kpi{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:12px 14px}
+.kpi .lbl{font-size:10px;color:var(--mid);font-weight:600;text-transform:uppercase;letter-spacing:.05em;margin-bottom:5px}
+.kpi .val{font-size:20px;font-weight:800}
+.kpi .note{font-size:10px;margin-top:3px;font-weight:600}
+.pos{color:var(--green)}.neg{color:var(--red)}.neu{color:var(--mid)}.ora{color:var(--orange)}
+
+/* BRAND GRID */
+.brand-grid{display:grid;grid-template-columns:repeat(5,1fr);gap:8px;margin-bottom:18px}
+.bc{background:var(--card);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:box-shadow .15s;overflow:hidden}
+.bc:hover{box-shadow:0 3px 8px rgba(0,0,0,.1)}
+.bc.sel{border-color:var(--rappi);box-shadow:0 0 0 2px rgba(255,105,0,.25)}
+.bc-top{padding:9px 10px 5px;display:flex;justify-content:space-between;align-items:flex-start}
+.bc-name{font-size:11px;font-weight:700;line-height:1.3;max-width:110px}
+.bc-body{padding:0 10px 9px}
+.bc-val{font-size:16px;font-weight:800}
+.bc-sub{font-size:10px;color:var(--mid);margin-top:1px}
+.bc-bar-bg{margin-top:6px;height:4px;background:#f1f5f9;border-radius:3px}
+.bc-bar{height:4px;border-radius:3px;background:var(--rappi)}
+.bc-pct{font-size:10px;color:var(--mid);margin-top:3px}
+
+/* PILLS */
+.pill{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:20px;font-size:10px;font-weight:700}
+.pg{background:var(--green-bg);color:#15803d}
+.pr{background:var(--red-bg);color:#991b1b}
+.po{background:var(--orange-bg);color:#9a3412}
+.py{background:var(--yellow-bg);color:#854d0e}
+.pb{background:var(--blue-bg);color:#1d4ed8}
+.pp{background:var(--purple-bg);color:#6d28d9}
+
+/* CAUSE TAG */
+.ct{display:inline-flex;align-items:center;gap:3px;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;text-transform:uppercase;letter-spacing:.04em}
+.ct-ok{background:var(--green-bg);color:#15803d}
+.ct-ally{background:#fce7f3;color:#9d174d}
+.ct-ops{background:var(--yellow-bg);color:#854d0e}
+.ct-brand{background:var(--purple-bg);color:#6d28d9}
+.ct-ava{background:var(--orange-bg);color:#9a3412}
+.ct-e2e{background:var(--blue-bg);color:#1d4ed8}
+.ct-new{background:var(--blue-bg);color:#1d4ed8}
+
+/* CHART PANELS */
+.panels{display:grid;grid-template-columns:2fr 1fr;gap:14px;margin-bottom:14px}
+.panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px}
+.panel h3{font-size:12px;font-weight:700;margin-bottom:2px}
+.panel .sub{font-size:10px;color:var(--mid);margin-bottom:12px}
+.ch{position:relative}
+
+.full-panel{background:var(--card);border:1px solid var(--border);border-radius:10px;padding:16px;margin-bottom:14px}
+.full-panel h3{font-size:12px;font-weight:700;margin-bottom:2px}
+.full-panel .sub{font-size:10px;color:var(--mid);margin-bottom:12px}
+
+/* STATS PANEL */
+.stats-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:8px;margin-bottom:10px}
+.stat-row{display:flex;justify-content:space-between;padding:6px 0;border-bottom:1px solid var(--border);font-size:11px}
+.stat-row:last-child{border:none}
+.stat-lbl{color:var(--mid)}
+.stat-val{font-weight:700}
+
+.ops-row{display:grid;grid-template-columns:repeat(4,1fr);gap:6px;margin-top:10px}
+.ops-box{background:var(--bg);border-radius:6px;padding:8px 10px;text-align:center}
+.ops-box .ob-lbl{font-size:9px;color:var(--mid);font-weight:600;text-transform:uppercase;margin-bottom:3px}
+.ops-box .ob-val{font-size:14px;font-weight:800}
+.ops-box .ob-trend{font-size:9px;margin-top:2px;font-weight:600}
+
+/* HEATMAP (diagnóstico operativo) */
+.hmap-wrap{overflow-x:auto}
+table.hmap{width:100%;border-collapse:collapse;font-size:11px}
+table.hmap th{background:var(--bg);padding:8px 10px;text-align:left;font-size:10px;text-transform:uppercase;letter-spacing:.05em;color:var(--mid);font-weight:700;border-bottom:1px solid var(--border)}
+table.hmap td{padding:8px 10px;border-bottom:1px solid var(--border)}
+table.hmap tr:hover td{background:#f8fafc}
+table.hmap tr:last-child td{border:none}
+.cell-good{background:#dcfce7;color:#15803d;font-weight:700;border-radius:4px;padding:2px 6px;display:inline-block}
+.cell-warn{background:#fef9c3;color:#854d0e;font-weight:700;border-radius:4px;padding:2px 6px;display:inline-block}
+.cell-bad{background:#fee2e2;color:#991b1b;font-weight:700;border-radius:4px;padding:2px 6px;display:inline-block}
+.cell-na{color:var(--mid);font-size:10px}
+
+/* PLAN */
+.plan-groups{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.pg-title{font-size:12px;font-weight:800;margin-bottom:10px;display:flex;align-items:center;gap:6px}
+.plan-card{background:var(--card);border:1px solid var(--border);border-radius:8px;padding:12px 14px;margin-bottom:8px;border-left:4px solid}
+.plan-card .pc-brand{font-size:12px;font-weight:800;margin-bottom:5px}
+.plan-card ol{padding-left:14px}
+.plan-card ol li{font-size:11px;line-height:1.65;color:#374151}
+.plan-card .pc-signal{font-size:10px;color:var(--mid);margin-top:4px;font-style:italic}
+.bdr{border-left-color:var(--red)}.bdo{border-left-color:var(--orange)}.bdg{border-left-color:var(--green)}
+
+.period-selector{display:flex;gap:6px;margin-bottom:14px;align-items:center;flex-wrap:wrap}
+.ps-lbl{font-size:11px;color:var(--mid);font-weight:600}
+.ps-btn{padding:4px 10px;border-radius:20px;border:1px solid var(--border);background:var(--card);font-size:11px;cursor:pointer;color:var(--mid)}
+.ps-btn.on{background:var(--dark);color:#fff;border-color:var(--dark)}
+
+.peak-badge{display:inline-flex;align-items:center;gap:3px;background:#fef3c7;color:#92400e;padding:2px 7px;border-radius:4px;font-size:10px;font-weight:700;margin-left:6px}
+</style>
+</head>
+<body>
+<div class="hdr">
+  <div>
+    <h1>Top 20 Turbo — Raquel Acosta · 18 Meses Completos</h1>
+    <small>Ene 2025 – Jun 2026 · GMV + Participación + Operación · Pico por Marca</small>
+  </div>
+  <span class="badge">BRAND_OWNER_LEADER</span>
+</div>
+<div class="wrap">
+
+  <div class="kpis">
+    <div class="kpi"><div class="lbl">GMV Turbo H1 2026</div><div class="val">$1.44M</div><div class="note pos">Top 20 marcas</div></div>
+    <div class="kpi"><div class="lbl">Crecen vs H1 2025</div><div class="val" style="color:var(--green)">14/20</div><div class="note pos">marcas YoY positivo</div></div>
+    <div class="kpi"><div class="lbl">Bajo pico histórico</div><div class="val" style="color:var(--red)">8</div><div class="note neg">marcas &gt;20% debajo del pico</div></div>
+    <div class="kpi"><div class="lbl">AVA crítica (&lt;85%)</div><div class="val" style="color:var(--orange)">4</div><div class="note neg">La Esquina, Huequito, Molinos, Mora Mora</div></div>
+    <div class="kpi"><div class="lbl">Defect Rate alto (&gt;4%)</div><div class="val" style="color:var(--red)">3</div><div class="note neg">Chiki Chiki, Pickup Coffee, Nimis abr</div></div>
+    <div class="kpi"><div class="lbl">E2E &gt;21 min</div><div class="val" style="color:var(--orange)">2</div><div class="note neg">Moshi Moshi 23.5, Carl's Jr 558104 21.3</div></div>
+  </div>
+
+  <div class="tabs">
+    <button class="tab on" onclick="tab('trend')">📈 18 Meses por Marca</button>
+    <button class="tab" onclick="tab('portfolio')">🗂️ Portafolio Total</button>
+    <button class="tab" onclick="tab('part')">📊 Participación Turbo %</button>
+    <button class="tab" onclick="tab('ops')">🔧 Diagnóstico Operativo</button>
+    <button class="tab" onclick="tab('plan')">🎯 Plan de Acción</button>
+    <button class="tab" onclick="tab('diag')" style="background:#FFF1F2;color:#9F1239;border-color:#FECDD3">🔴 Diagnóstico Final</button>
+  </div>
+
+  <!-- ===== TAB 1: TREND ===== -->
+  <div id="pane-trend" class="pane on">
+    <div class="brand-grid" id="brandGrid"></div>
+    <div class="panels">
+      <div class="panel">
+        <h3 id="chartTitle">Selecciona una marca</h3>
+        <div class="sub" id="chartSub">GMV Turbo mensual (USD) · 18 meses · línea azul = participación % sobre brand total</div>
+        <div class="ch"><canvas id="trendChart" height="220"></canvas></div>
+      </div>
+      <div class="panel" id="detailPanel">
+        <h3>—</h3>
+        <p style="color:var(--mid);font-size:11px;margin-top:8px">Haz clic en una tarjeta para ver el detalle</p>
+      </div>
+    </div>
+    <div class="full-panel">
+      <h3>Comparativo H1 2025 vs H1 2026 — Todos los Top 20</h3>
+      <div class="sub">GMV Turbo semestre 1 (Ene–Jun). Barras agrupadas para detectar crecimiento o caída.</div>
+      <div class="ch"><canvas id="compareChart" height="160"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ===== TAB PORTAFOLIO TOTAL ===== -->
+  <div id="pane-portfolio" class="pane">
+    <div class="kpis" id="portfolioKpis"></div>
+    <div class="full-panel">
+      <h3>GMV Total Portafolio — 20 Marcas Turbo · Ene 2025 – Jun 2026</h3>
+      <div class="sub">Suma de las 20 marcas. Naranja = H1 2026 · Azul = H2 2025 · Gris = H1 2025. La línea roja marca el pico del portafolio.</div>
+      <div style="display:flex;gap:10px;margin-bottom:10px;flex-wrap:wrap">
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mid)"><span style="width:10px;height:10px;border-radius:2px;background:#94A3B8;display:inline-block"></span>H1 2025</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mid)"><span style="width:10px;height:10px;border-radius:2px;background:#3B82F6;display:inline-block"></span>H2 2025</span>
+        <span style="display:flex;align-items:center;gap:4px;font-size:11px;color:var(--mid)"><span style="width:10px;height:10px;border-radius:2px;background:#FF6900;display:inline-block"></span>H1 2026</span>
+      </div>
+      <div class="ch"><canvas id="portfolioChart" height="220"></canvas></div>
+    </div>
+    <div class="full-panel">
+      <h3>Comparativo H1 · Mismo Mes — 2025 vs 2026</h3>
+      <div class="sub">¿Por qué junio tiene menos órdenes que enero? Porque ene–feb es pico anual (frío + campaña Rappi). La comparación correcta es <strong>junio vs junio: +195% YoY</strong>.</div>
+      <div class="ch"><canvas id="portfolioYoY" height="160"></canvas></div>
+    </div>
+    <div class="full-panel">
+      <h3>Contribución por Marca — Jun 2026</h3>
+      <div class="sub">¿Quién pesa más en el portafolio este mes? GMV Turbo junio 2026 por marca.</div>
+      <div class="ch" style="height:520px"><canvas id="portfolioPie"></canvas></div>
+    </div>
+  </div>
+
+  <!-- ===== TAB 2: PARTICIPACIÓN ===== -->
+  <div id="pane-part" class="pane">
+    <div class="full-panel">
+      <h3>Participación Turbo % sobre GMV Total de la Marca · Ene 2025 – Jun 2026</h3>
+      <div class="sub">% = GMV Turbo / GMV total (regular + Turbo). Líneas mensuales por marca.</div>
+      <div class="period-selector">
+        <span class="ps-lbl">Vista:</span>
+        <button class="ps-btn on" onclick="setPartView('all')">Todos</button>
+        <button class="ps-btn" onclick="setPartView('high')">Alta participación (&gt;30%)</button>
+        <button class="ps-btn" onclick="setPartView('low')">Baja participación (&lt;15%)</button>
+      </div>
+      <div class="ch"><canvas id="partChart" height="300"></canvas></div>
+    </div>
+    <div class="full-panel">
+      <h3>Tabla de Participación Jun 2026 — ordenada por % Turbo</h3>
+      <div class="sub">¿Qué porcentaje del negocio de la marca ya es Turbo? Bajo % = potencial no capturado.</div>
+      <table class="hmap" id="partTable"></table>
+    </div>
+  </div>
+
+  <!-- ===== TAB 3: OPS ===== -->
+  <div id="pane-ops" class="pane">
+    <div class="full-panel">
+      <h3>Diagnóstico Operativo por Marca · Junio 2026 (último mes disponible)</h3>
+      <div class="sub">Defect Rate = % órdenes con problema · AVA = disponibilidad de la tienda · E2E = tiempo total entrega · Prep = tiempo de preparación · WT = wait time del repartidor en tienda</div>
+      <div class="hmap-wrap">
+        <table class="hmap" id="opsTable"></table>
+      </div>
+    </div>
+    <div class="full-panel">
+      <h3>Tendencia Operativa — ¿Está mejorando o empeorando?</h3>
+      <div class="sub">Comparación Ene 2026 vs Jun 2026 para las métricas clave. 🔴 = empeoró · 🟢 = mejoró</div>
+      <table class="hmap" id="opsTrendTable"></table>
+    </div>
+  </div>
+
+  <!-- ===== TAB 4: PLAN ===== -->
+  <div id="pane-plan" class="pane">
+    <div class="plan-groups">
+      <div>
+        <div class="pg-title">🚨 Acción Inmediata — Esta Semana</div>
+        <div class="plan-card bdr">
+          <div class="pc-brand">La Esquina del Chilaquil (576) <span class="ct ct-ava">AVA Cayendo</span></div>
+          <ol>
+            <li>AVA bajó de 96% (Oct 2025) a 62% (Jun 2026). La tienda TURBO no está marcándose disponible.</li>
+            <li>Posible causa: la marca abrió canal regular en 2026 y el equipo de la tienda prioriza regular sobre Turbo.</li>
+            <li>Acción: revisar horarios de activación del canal Turbo. Meta: AVA ≥ 90%.</li>
+          </ol>
+          <div class="pc-signal">Pico: Ago 2025 ($45.9k) · Jun 2026: $20.5k (-55% del pico)</div>
+        </div>
+        <div class="plan-card bdr">
+          <div class="pc-brand">Moshi Moshi Turbo (562613) <span class="ct ct-ally">Aliado no prioriza</span> <span class="ct ct-e2e">E2E 23.5 min</span></div>
+          <ol>
+            <li>$200k+ GMV regular/mes con solo 3-8% en Turbo = mayor oportunidad del portafolio.</li>
+            <li>E2E subió de 15.6 min (Feb 2025) a 23.5 min (Jun 2026) — la promesa Turbo (&lt;20 min) está rota.</li>
+            <li>Acción: revisar radio de cobertura y tiempos de preparación. Negociar reducción de prep de 12.8 a &lt;8 min.</li>
+          </ol>
+          <div class="pc-signal">E2E Oct 2025: 22.8 min · Jun 2026: 23.5 min → trend negativo</div>
+        </div>
+        <div class="plan-card bdr">
+          <div class="pc-brand">Chiki Chiki Turbo (543391) <span class="ct ct-ops">Defect Rate +5.5%</span></div>
+          <ol>
+            <li>Defect rate: Ene 26: 3.08% → Jun 26: 5.47% → tendencia de deterioro continuo.</li>
+            <li>Prep time también subió: 11.3 min → 13.8 min. La operación se está degradando.</li>
+            <li>Acción: auditar la cocina y los procesos de despacho. Si no mejora en 30 días, revisar contrato Turbo.</li>
+          </ol>
+          <div class="pc-signal">El GMV crece (+944% YoY) pero la calidad baja — riesgo de rating en app</div>
+        </div>
+        <div class="plan-card bdr">
+          <div class="pc-brand">Carl's Jr 553911 <span class="ct ct-ava">Cliff Dec→Ene: -96%</span></div>
+          <ol>
+            <li>PICO: Dic 2025 $140.5k → Ene 2026 $5.3k → caída de 96% en un mes.</li>
+            <li>El canal dejó de operar normalmente en Q1 2026. Verificar: ¿hubo un reset de polígono? ¿Tiendas desactivadas?</li>
+            <li>Acción urgente: contactar al equipo técnico de Turbo y revisar qué tiendas (store IDs) están activas.</li>
+          </ol>
+          <div class="pc-signal">Ops desde Nov 2025 confirman solo 105-500 órdenes/mes vs $140k de GMV → inconsistencia</div>
+        </div>
+      </div>
+      <div>
+        <div class="pg-title">⚠️ Intervención — Esta Quincena</div>
+        <div class="plan-card bdo">
+          <div class="pc-brand">Pickup Coffee Turbo (562956) <span class="ct ct-ops">Defect 3-7%</span></div>
+          <ol>
+            <li>Defect rate crónico: 3.96% (Ene 2025) → pico 7.27% (Feb 2025) → actual 3.30%.</li>
+            <li>El GMV cayó de $27k (Abr 2026) a $11.8k (Jun 2026) = -56% en 3 meses.</li>
+            <li>Acción: revisar qué tipo de defecto domina (faltante, temperatura, producto incorrecto). Proponer checklist de despacho.</li>
+          </ol>
+          <div class="pc-signal">Regular también cae ($45k→$24k). Problema es de marca, no solo de canal Turbo.</div>
+        </div>
+        <div class="plan-card bdo">
+          <div class="pc-brand">Carl's Jr Turbo 558104 <span class="ct ct-e2e">E2E 21.3 min</span></div>
+          <ol>
+            <li>E2E: Ene 2025: 15.5 min → Jun 2026: 21.3 min. En 18 meses se deterioró +6 min.</li>
+            <li>El GMV bajó de $143k (Ene 2026) a $68k (Jun 2026) = -52%. La promesa Turbo rota explica la caída.</li>
+            <li>Acción: revisar tiempos de prep y de recolección por tienda. Target: E2E ≤ 18 min para recuperar conversión.</li>
+          </ol>
+          <div class="pc-signal">Defect rate también subiendo: 2.22% (Ene 2025) → 5.44% (Ene 2026) → 3.17% (Jun 2026)</div>
+        </div>
+        <div class="plan-card bdo">
+          <div class="pc-brand">El Huequito Turbo (562944) <span class="ct ct-ava">AVA crónico 53-88%</span></div>
+          <ol>
+            <li>AVA consistentemente bajo en 2025: 53% (Abr), 55% (May), 58% (Jun) → inaceptable para Turbo.</li>
+            <li>Abr 2026: solo 28 órdenes con AVA 93.7% → gap de demanda, no de disponibilidad. Posible recorte de polígono.</li>
+            <li>Acción: pedir a OPS que revise si el radio de cobertura fue modificado en Q1 2026.</li>
+          </ol>
+          <div class="pc-signal">E2E también alto: 18.3-24.5 min. La tienda tiene múltiples problemas operativos.</div>
+        </div>
+        <div class="plan-card bdo">
+          <div class="pc-brand">Maison Kayser + Shaka 808 <span class="ct ct-ally">Aliado no prioriza</span></div>
+          <ol>
+            <li>Maison Kayser: ops perfectas (AVA 96-100%, defect &lt;5%, E2E 17-19 min) pero Turbo cae mientras regular crece +20%.</li>
+            <li>Shaka 808: ops excelentes (AVA 95-99%, defect &lt;3%) pero solo 6-7% participación sobre $109k regular.</li>
+            <li>Acción en ambas: reunión comercial para proponer meta de participación Turbo ≥ 20% y revisar visibilidad en la app.</li>
+          </ol>
+          <div class="pc-signal">Estas son las dos mayores oportunidades de GMV incremental sin inversión operativa.</div>
+        </div>
+        <div class="pg-title" style="margin-top:18px">🚀 Acelerar Momentum</div>
+        <div class="plan-card bdg">
+          <div class="pc-brand">Franco Cocina + Bocado Salumeria + Mora Mora</div>
+          <ol>
+            <li>Franco Cocina: 64% participación Turbo, defect 1.2%, AVA 94.6%, E2E 19.7 min. → Caso de éxito. Proponer expansión de cobertura.</li>
+            <li>Bocado Salumeria: lanzó Feb 2026, Turbo ya supera a regular en junio ($7.2k vs $5.4k). Documentar y replicar modelo de lanzamiento.</li>
+            <li>Mora Mora: +965% YoY, AVA 96%, defect 1.8% → consolidar con incentivo o garantía para anclar el canal.</li>
+          </ol>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+  <!-- ===== TAB DIAGNÓSTICO FINAL ===== -->
+  <div id="pane-diag" class="pane">
+
+    <!-- Resumen portafolio -->
+    <div class="kpis" style="grid-template-columns:repeat(4,1fr)">
+      <div class="kpi"><div class="lbl">GMV Portafolio H1 2026</div><div class="val">$2.24M</div><div class="note pos">20 marcas Turbo · Raquel Acosta</div></div>
+      <div class="kpi"><div class="lbl">Crecimiento YoY H1</div><div class="val pos">+229%</div><div class="note pos">vs H1 2025 ($681k)</div></div>
+      <div class="kpi"><div class="lbl">Marcas con problema</div><div class="val" style="color:var(--red)">13 / 20</div><div class="note neg">necesitan acción o monitoreo</div></div>
+      <div class="kpi"><div class="lbl">Mayor oportunidad</div><div class="val ora">Aliado</div><div class="note neg">3 marcas con ops buenas pero baja participación</div></div>
+    </div>
+
+    <!-- Tabla resumen Mauro -->
+    <div class="full-panel" style="border-left:4px solid var(--dark)">
+      <h3>Resumen ejecutivo — 20 marcas clasificadas por causa raíz</h3>
+      <div class="sub" style="margin-bottom:14px">Framework: ¿qué impide que la marca crezca en Turbo?</div>
+      <table class="hmap" style="font-size:12px">
+        <thead>
+          <tr>
+            <th style="width:22%">Marca</th>
+            <th style="width:14%">GMV Jun 26</th>
+            <th style="width:10%">Part. Turbo</th>
+            <th style="width:14%">Tendencia</th>
+            <th style="width:16%">Causa raíz</th>
+            <th>Acción clave</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- VERDE -->
+          <tr><td colspan="6" style="background:#f0fdf4;font-size:10px;font-weight:800;color:#15803d;padding:6px 10px;text-transform:uppercase;letter-spacing:.06em">✅ Creciendo bien — mantener y acelerar (7 marcas)</td></tr>
+          <tr><td><strong>Franco Cocina</strong></td><td>$88k</td><td><span class="cell-good">64%</span></td><td class="pos">↑↑ +567% YoY</td><td><span class="ct ct-ok">Bien ejecutado</span></td><td>Caso de éxito — replicar modelo</td></tr>
+          <tr><td><strong>Mora Mora</strong></td><td>$12k</td><td>47%</td><td class="pos">↑↑ +965% YoY</td><td><span class="ct ct-ok">Bien ejecutado</span></td><td>Consolidar con incentivo o garantía</td></tr>
+          <tr><td><strong>Bocado Salumeria</strong></td><td>$7.2k</td><td>134%*</td><td class="pos">↑↑ Nuevo 2026</td><td><span class="ct ct-new">Nuevo</span></td><td>Turbo ya supera regular — documentar</td></tr>
+          <tr><td><strong>Nimis Shawarma</strong></td><td>$16k</td><td>33%</td><td class="pos">↑ +245% YoY</td><td><span class="ct ct-ok">Bien ejecutado</span></td><td>Mantener ritmo</td></tr>
+          <tr><td><strong>Churros El Moro</strong></td><td>$10k</td><td>27%</td><td class="pos">↑ +135% YoY</td><td><span class="ct ct-ok">Bien ejecutado</span></td><td>E2E 22 min — leve atención</td></tr>
+          <tr><td><strong>Fougasse</strong></td><td>$5.1k</td><td>25%</td><td class="pos">↑ +360% YoY</td><td><span class="ct ct-ok">Bien ejecutado</span></td><td>Recuperado — monitorear</td></tr>
+          <tr><td><strong>Fat Bastard</strong></td><td>$3.8k</td><td>72%</td><td class="neu">~ Nuevo Oct 25</td><td><span class="ct ct-new">Nuevo</span></td><td>AVA 98% — monitorear</td></tr>
+
+          <!-- ALIADO -->
+          <tr><td colspan="6" style="background:#fce7f3;font-size:10px;font-weight:800;color:#9d174d;padding:6px 10px;text-transform:uppercase;letter-spacing:.06em">⚠️ Causa: aliado no prioriza Turbo — mayor GMV incremental posible (3 marcas)</td></tr>
+          <tr><td><strong>Moshi Moshi</strong></td><td>$17k</td><td><span class="cell-bad">8%</span></td><td class="pos">↑ crece</td><td><span class="ct ct-ally">Aliado · E2E 23.5m</span></td><td>$200k/mes regular sin aprovechar · reunión urgente + target part. ≥15%</td></tr>
+          <tr><td><strong>Shaka 808</strong></td><td>$8.7k</td><td><span class="cell-bad">7%</span></td><td class="pos">↑ crece</td><td><span class="ct ct-ally">Aliado no activa</span></td><td>$109k/mes regular · ops perfectas · solo falta voluntad</td></tr>
+          <tr><td><strong>Maison Kayser</strong></td><td>$3.1k</td><td><span class="cell-bad">2%</span></td><td class="neg">↓ cae</td><td><span class="ct ct-ally">Aliado no activa</span></td><td>AVA 99% · Turbo cae mientras regular +20% · proponer meta</td></tr>
+
+          <!-- OPS -->
+          <tr><td colspan="6" style="background:#fef9c3;font-size:10px;font-weight:800;color:#854d0e;padding:6px 10px;text-transform:uppercase;letter-spacing:.06em">🔧 Causa: operación mala / calidad degradada (4 marcas)</td></tr>
+          <tr><td><strong>Carl's Jr T1 (558104)</strong></td><td>$68k</td><td>20%</td><td class="neg">↓ -52% del pico</td><td><span class="ct ct-e2e">E2E 21.3 min</span></td><td>E2E fue 15.5→21.3 min en 18m · promesa Turbo rota · target ≤18 min</td></tr>
+          <tr><td><strong>Pickup Coffee</strong></td><td>$11.8k</td><td>49%</td><td class="neg">↓ cae ambos canales</td><td><span class="ct ct-ops">Defect 3–7%</span></td><td>Defect crónico 18 meses · problema de marca · checklist de despacho</td></tr>
+          <tr><td><strong>Chiki Chiki</strong></td><td>$6.8k</td><td>25%</td><td class="pos">↑ GMV crece</td><td><span class="ct ct-ops">Defect ↑ 5.5%</span></td><td>Crece pero calidad cae · riesgo rating · auditoría de cocina urgente</td></tr>
+          <tr><td><strong>Pollos Ray</strong></td><td>$11.5k</td><td>20%</td><td class="pos">↑ crece</td><td><span class="ct ct-ops">Defect 4.2% · WT 4.9m</span></td><td>Wait time más alto del portafolio · revisar procesos de despacho</td></tr>
+
+          <!-- AVA / POLÍGONO -->
+          <tr><td colspan="6" style="background:#fff7ed;font-size:10px;font-weight:800;color:#9a3412;padding:6px 10px;text-transform:uppercase;letter-spacing:.06em">🔴 Causa: AVA baja / posible polígono cortado (3 marcas)</td></tr>
+          <tr><td><strong>La Esquina Chilaquil</strong></td><td>$20.5k</td><td>38%</td><td class="neg">↓ -55% del pico</td><td><span class="ct ct-ava">AVA 62.5%</span></td><td>Abrió canal regular 2026 · tienda deja de encender Turbo · revisar horarios</td></tr>
+          <tr><td><strong>El Huequito</strong></td><td>$5.5k</td><td>14%</td><td class="neu">~ volátil</td><td><span class="ct ct-ava">AVA crónico bajo</span></td><td>Abr26: 28 órdenes con AVA ok → polígono cortado · ticket a OPS</td></tr>
+          <tr><td><strong>Molinos Picotazo</strong></td><td>$3.3k</td><td>23%</td><td class="neu">~</td><td><span class="ct ct-ava">AVA 83.7%</span></td><td>Tienda cerrada demasiado tiempo · revisar configuración de horarios</td></tr>
+
+          <!-- TÉCNICO -->
+          <tr><td colspan="6" style="background:#eff6ff;font-size:10px;font-weight:800;color:#1e40af;padding:6px 10px;text-transform:uppercase;letter-spacing:.06em">🛠️ Causa: falla técnica (1 marca)</td></tr>
+          <tr><td><strong>Carl's Jr T2 (553911)</strong></td><td>$5.6k</td><td>0.3%</td><td class="neg">↓↓ cliff -96%</td><td><span class="ct ct-e2e">Cliff técnico</span></td><td>Dic25 $140k → Ene26 $5k en un mes · ticket urgente equipo Turbo · verificar store IDs</td></tr>
+
+          <!-- DEMANDA -->
+          <tr><td colspan="6" style="background:#f5f3ff;font-size:10px;font-weight:800;color:#6d28d9;padding:6px 10px;text-transform:uppercase;letter-spacing:.06em">📉 Causa: demanda débil / marca en declive (2 marcas)</td></tr>
+          <tr><td><strong>Mora Mora JB</strong></td><td>$5.3k</td><td>62%</td><td class="neg">↓ cae</td><td><span class="ct ct-brand">Declive de marca</span></td><td>Ops OK · tanto regular como Turbo declining · problema comercial de la marca</td></tr>
+          <tr><td><strong>Green Grass</strong></td><td>$71k</td><td>50%</td><td class="pos">↑ +8% YoY H1</td><td><span class="ct ct-ok">Volátil · OK</span></td><td>Muy volátil mes a mes · AVA 95% · monitorear</td></tr>
+        </tbody>
+      </table>
+      <div style="font-size:10px;color:var(--mid);margin-top:8px">* Bocado Salumeria part. >100% = data de brand daddy pendiente de validar</div>
+    </div>
+
+    <!-- Priorización para el deck -->
+    <div class="full-panel" style="border-left:4px solid var(--rappi)">
+      <h3>Priorización para el deck de Mauricio — próximo martes</h3>
+      <div class="sub" style="margin-bottom:14px">Ordenado por impacto en GMV potencial</div>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:14px">
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--red);margin-bottom:8px">🚨 Esta semana</div>
+          <div class="plan-card bdr" style="margin-bottom:8px">
+            <div class="pc-brand">Carl's Jr T2 (553911)</div>
+            <div style="font-size:11px;color:#374151;line-height:1.6">Ticket urgente a equipo Turbo. ¿Qué store IDs están activos? ¿Hubo reset de polígono en diciembre 2025?</div>
+          </div>
+          <div class="plan-card bdr" style="margin-bottom:8px">
+            <div class="pc-brand">La Esquina Chilaquil (576)</div>
+            <div style="font-size:11px;color:#374151;line-height:1.6">Revisar horarios de activación del canal Turbo. AVA 62% es inaceptable. Hablar con la tienda.</div>
+          </div>
+          <div class="plan-card bdr">
+            <div class="pc-brand">Chiki Chiki (543391)</div>
+            <div style="font-size:11px;color:#374151;line-height:1.6">Defect 5.5% con GMV creciendo = bomba de tiempo. Auditoría de cocina antes de que el rating caiga.</div>
+          </div>
+        </div>
+        <div>
+          <div style="font-size:11px;font-weight:800;color:var(--orange);margin-bottom:8px">⚠️ Esta quincena</div>
+          <div class="plan-card bdo" style="margin-bottom:8px">
+            <div class="pc-brand">Moshi Moshi · Shaka 808 · Maison Kayser</div>
+            <div style="font-size:11px;color:#374151;line-height:1.6">Juntar las 3 en una misma reunión comercial. El argumento es el mismo: tienen potencial de 3-15x más GMV Turbo y no lo están priorizando. Proponer meta de participación con hito en 60 días.</div>
+          </div>
+          <div class="plan-card bdo" style="margin-bottom:8px">
+            <div class="pc-brand">Carl's Jr T1 (558104)</div>
+            <div style="font-size:11px;color:#374151;line-height:1.6">E2E 21.3 min → target 18 min. Revisar prep por tienda. Cada minuto de mejora en E2E = ~5% de conversión.</div>
+          </div>
+          <div class="plan-card bdo">
+            <div class="pc-brand">El Huequito · Molinos Picotazo</div>
+            <div style="font-size:11px;color:#374151;line-height:1.6">Ticket a OPS para revisar polígonos y horarios. Bajo riesgo operativo, alto impacto si se resuelve.</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+<script>
+// ===== 18-MONTH LABELS =====
+const LBLS = ['Ene25','Feb25','Mar25','Abr25','May25','Jun25','Jul25','Ago25','Sep25','Oct25','Nov25','Dic25','Ene26','Feb26','Mar26','Abr26','May26','Jun26'];
+// index: 0=Jan2025, 6=Jul2025, 12=Jan2026, 17=Jun2026
+
+// ===== BRAND DEFINITIONS =====
+const BRANDS = {
+  575113:{name:'Franco Cocina',     daddy:361448},
+  558104:{name:"Carl's Jr Turbo 1", daddy:196},
+  546455:{name:'Green Grass',       daddy:449},
+  562956:{name:'Pickup Coffee',     daddy:548388},
+  576:   {name:'La Esquina Chilaquil',daddy:576},
+  553911:{name:"Carl's Jr Turbo 2", daddy:13229},
+  565552:{name:'Mora Mora',         daddy:732},
+  619642:{name:'Pollos Ray',        daddy:19771},
+  562613:{name:'Moshi Moshi',       daddy:733},
+  545310:{name:'Churros El Moro',   daddy:956},
+  565553:{name:'Mora Mora JB',      daddy:563758},
+  542049:{name:'Nimis Shawarma',    daddy:365632},
+  547874:{name:'Shaka 808',         daddy:52366},
+  574423:{name:'Maison Kayser',     daddy:220055},
+  598590:{name:'Molinos Picotazo',  daddy:66605},
+  562944:{name:'El Huequito',       daddy:23532},
+  574177:{name:'Fougasse',          daddy:65629},
+  543391:{name:'Chiki Chiki',       daddy:484188},
+  633010:{name:'Fat Bastard',       daddy:461506},
+  661248:{name:'Bocado Salumeria',  daddy:646846},
+};
+
+// ===== TURBO GMV (USD) 18 months =====
+const T={
+  575113:[13252,16852,18082,16178,27054,34236,35249,35660,39818,44289,38447,43663,77220,25115,63364,73642,101928,88402],
+  558104:[18231,21857,28537,30681,26809,22800,21121,60411,88792,88674,126544,99085,143873,95652,89309,82797,78372,68424],
+  546455:[33568,38726,34301,37687,40861,36558,40346,17651,null,55311,74143,80571,96071,23798,57262,73929,84069,71135],
+  562956:[2230,5215,4863,7097,10578,8160,10478,8994,10172,8234,14738,17580,20383,25986,23576,27124,15866,11796],
+  576:   [null,null,null,null,null,null,39418,45878,36379,40746,41273,35381,null,3782,23959,20893,21350,20548],
+  553911:[null,null,null,null,null,null,35235,61170,76519,111606,121072,140529,5300,7946,5011,1051,5031,5587],
+  565552:[1436,747,1067,1128,931,779,1716,4105,9836,11673,11253,13106,11764,8697,11814,8884,11781,11897],
+  619642:[null,null,null,null,null,null,69,283,1196,2284,5445,5678,6744,8451,10296,6474,12143,11500],
+  562613:[2611,4031,3027,3408,7743,7045,5524,7851,11266,16144,10327,5939,8014,7446,13856,10839,22391,17019],
+  545310:[3931,3015,2222,2601,4743,5471,4965,6881,9905,11039,12263,8802,11565,8977,7851,4928,8027,10314],
+  565553:[2651,3093,3265,1560,3408,2447,4673,6348,8074,7381,10077,9893,7764,6727,6633,4964,8433,5284],
+  542049:[4991,4015,4813,2833,5279,3019,2817,4636,5716,5440,2868,8176,19389,6520,12334,10489,21243,16056],
+  547874:[2963,1723,2411,2561,4018,3214,3535,4071,4113,4420,6087,5835,6909,8193,7759,7352,8207,8679],
+  574423:[1369,2165,2331,2205,2185,3031,2401,2661,3346,3171,4767,4287,4967,4263,4939,4211,3720,3097],
+  598590:[null,null,null,null,null,null,null,252,684,2852,3673,4084,4728,4818,3051,3500,3709,3275],
+  562944:[1412,2143,2345,3071,1934,1166,1853,2719,7429,7619,7771,5085,4315,3449,3458,639,6036,5505],
+  574177:[1067,518,854,545,1003,788,1101,1683,2646,5759,6010,3734,3373,2546,3120,2912,4866,5139],
+  543391:[483,134,789,294,439,461,840,418,1079,831,360,3236,5347,2053,5351,2032,5550,6791],
+  633010:[null,null,null,null,null,null,null,null,null,1499,3819,4140,3276,5055,3657,9342,6380,3797],
+  661248:[null,null,null,null,null,null,null,null,null,null,null,null,null,1028,4961,6427,7777,7222],
+};
+
+// ===== TOTAL BRAND GMV (USD) 2025+2026 =====
+const TOT={
+  361448:[73805,65962,69886,64858,66176,54079,50083,44509,43196,43956,48510,106046,166838,178420,117006,202733,203657,137182],
+  196:   [476915,487727,497517,525594,588806,527305,523435,564066,494053,511687,657030,614006,606467,620475,504984,403034,406363,341893],
+  449:   [126201,116593,130252,134649,139187,123298,128924,140971,151994,116542,117687,175426,243403,230915,164543,187480,203149,143565],
+  548388:[19431,24015,29505,32247,60121,43813,41731,31121,40861,33290,27199,20973,45198,39231,47732,42155,25947,24022],
+  576:   [34202,35033,41810,37763,39695,40216,39418,45878,36379,40746,41273,35381,34342,43487,58264,60541,57652,53888],
+  13229: [1603377,1612202,1759483,1649389,1884226,1808611,1858972,2065894,2122395,1872626,2115419,2111502,2059917,2037922,1906802,1899959,2043565,1820120],
+  732:   [110223,85670,91224,58283,73120,57197,56167,49853,36192,31048,36506,27502,29106,29911,28563,25149,27493,25326],
+  19771: [75520,73012,75956,74955,80339,75930,76590,78093,71603,71466,77083,74851,67147,54018,62869,62000,62036,57487],
+  733:   [183910,163839,184968,182636,201233,182867,198109,242253,230938,250288,245418,213699,265431,201197,229949,218947,235177,216902],
+  956:   [50202,46436,35661,43768,48808,65028,58789,49723,52099,45332,74621,43140,69331,38829,45053,40691,52545,38173],
+  563758:[59529,49130,61424,18561,38257,23842,24307,23077,15428,12118,17080,14519,13466,15425,10927,12629,9942,8463],
+  365632:[23159,22023,23938,22763,24157,21414,18234,17303,16386,15419,15022,48059,98412,93601,66956,104460,82686,48648],
+  52366: [93839,106779,104242,88973,99657,84643,88501,88801,115888,114759,112570,77303,109539,94515,105094,128190,123587,115489],
+  220055:[165091,150806,167301,168404,161605,130429,115325,129031,124544,140636,136991,130392,123961,117084,119161,143146,174244,148807],
+  66605: [17531,16066,16640,24641,22877,19469,19487,22892,22517,21514,19210,17621,15605,13630,14563,15092,14710,14335],
+  23532: [52350,47552,58128,48889,51525,47522,46298,48697,41822,41137,37603,38149,38706,35849,38816,36058,34069,38225],
+  65629: [22843,26848,33449,26456,31908,31362,28084,29348,25506,29750,28218,21317,24847,26470,24256,20471,22993,20704],
+  484188:[1932,1907,1607,991,954,1193,1057,922,804,452,273,22164,47134,24966,27619,45501,56352,27268],
+  461506:[null,null,1322,1716,565,1247,819,830,3620,3628,4172,3299,3234,5038,9885,11059,10380,5287],
+  646846:[null,null,null,null,null,null,null,null,null,null,null,null,3211,13312,8768,8894,8725,5373],
+};
+
+// ===== OPS DATA (Jun 2026 latest + trends) =====
+// [defect_jan26, ava_jan26, e2e_jan26, prep_jan26, defect_jun26, ava_jun26, e2e_jun26, prep_jun26, wait_jun26]
+const OPS={
+  576:   [2.03,87.2,15.8,6.3, 1.18,62.5,14.2,6.1, 0.8],
+  542049:[3.50,95.4,20.0,10.3, 1.27,95.6,21.6,11.3, 1.9],
+  543391:[3.08,86.2,21.0,12.8, 5.47,93.6,21.3,11.9, 1.9],
+  545310:[2.61,95.0,18.9,8.6, 2.16,95.5,22.3,9.7, 3.6],
+  546455:[3.22,98.8,18.6,10.1, 2.97,95.3,18.6,9.1, 1.9],
+  547874:[1.67,95.9,18.1,7.8, 2.69,97.8,19.8,8.8, 3.0],
+  553911:[1.41,93.9,17.3,7.3, 1.51,89.6,19.5,9.6, 0.9],
+  558104:[5.44,96.5,19.2,8.0, 3.17,93.7,21.3,9.7, 2.6],
+  562613:[0.86,99.5,20.0,11.7, 2.28,97.2,23.5,12.8, 2.9],
+  562944:[1.97,75.5,19.3,12.0, 2.58,72.1,24.5,12.9, 3.6],
+  562956:[5.64,94.6,18.1,8.1, 3.30,94.7,16.5,6.7, 2.8],
+  565552:[1.95,98.5,17.3,8.8, 1.85,96.4,18.2,9.8, 1.5],
+  565553:[2.25,94.0,16.7,8.0, 1.02,98.8,18.6,9.4, 1.7],
+  574177:[3.55,95.1,20.6,8.6, 2.35,97.5,20.7,9.1, 3.9],
+  574423:[2.27,99.1,18.7,7.1, 3.45,98.9,18.6,8.9, 2.0],
+  575113:[1.72,96.9,19.5,10.7, 1.23,94.6,19.7,10.1, 1.6],
+  598590:[3.67,86.2,17.2,6.0, 1.08,83.7,20.2,8.1, 3.5],
+  619642:[3.63,96.9,18.7,6.7, 4.17,90.1,20.3,7.1, 4.9],
+  633010:[1.60,97.6,16.5,8.0, 2.76,98.2,20.3,11.1, 1.5],
+  661248:[null,null,null,null, 1.35,99.0,16.7,6.8, 1.7],
+};
+
+// ===== DIAGNOSIS PER BRAND =====
+const DIAG={
+  575113:{cause:'ok',    trend:'↑↑', signal:'64% part. Jun · defect 1.2% · AVA 94.6% · E2E 19.7 min → estrella'},
+  558104:{cause:'e2e',   trend:'↓',  signal:'E2E subió de 15.5→21.3 min · GMV -52% desde pico Ene26'},
+  546455:{cause:'ok',    trend:'↑',  signal:'Green Grass: AVA 95% · part. 50% · declive regular compensado por Turbo'},
+  562956:{cause:'ops',   trend:'↓',  signal:'Defect crónico 3-7.3% · GMV cae ambos canales · problema de marca'},
+  576:   {cause:'ava',   trend:'↓',  signal:'AVA cayó de 96% a 62.5% · apertura canal regular desplaza al Turbo'},
+  553911:{cause:'ava',   trend:'↓↓', signal:'CLIFF: $140.5k (Dic25) → $5.3k (Ene26) → investigar store IDs activos'},
+  565552:{cause:'ok',    trend:'↑↑', signal:'Mora Mora: +965% YoY · AVA 96% · defect 1.85% → creciendo bien'},
+  619642:{cause:'ops',   trend:'↑',  signal:'Pollos Ray: store wait 4.9 min · E2E 20.3 min · defect 4.17% Jun'},
+  562613:{cause:'ally',  trend:'↑',  signal:'Moshi Moshi: E2E 23.5 min · 3-8% part. sobre $200k regular → potencial'},
+  545310:{cause:'ok',    trend:'↑',  signal:'Churros El Moro: +135% YoY · AVA 95.5% · E2E 22.3 min (ojo)'},
+  565553:{cause:'brand', trend:'↓',  signal:'Mora Mora JB: regular y Turbo declining · ops ok · problema de demanda'},
+  542049:{cause:'ok',    trend:'↑',  signal:'Nimis: +245% YoY · AVA 95.6% · défect 1.27% → bien'},
+  547874:{cause:'ally',  trend:'↑',  signal:'Shaka 808: 6-7% part. sobre $109k regular · ops excelentes → subutilizado'},
+  574423:{cause:'ally',  trend:'↓t', signal:'Maison Kayser: AVA 99% · defect ok · pero Turbo -2% mientras regular +20%'},
+  598590:{cause:'ava',   trend:'~',  signal:'Molinos: AVA 83.7% consistentemente bajo → disponibilidad issue'},
+  562944:{cause:'ava',   trend:'↑',  signal:'El Huequito: AVA crónico bajo 53-93% · Abr26: solo 28 órdenes → polígono?'},
+  574177:{cause:'ok',    trend:'↑',  signal:'Fougasse: normalizado · +360% YoY · AVA 97.5% → recuperado'},
+  543391:{cause:'ops',   trend:'↑',  signal:'Chiki Chiki: defect escalando 3→5.5% · prep 11→13.8 min → deterioro ops'},
+  633010:{cause:'ok',    trend:'~',  signal:'Fat Bastard: nuevo · AVA 98% · defect 2.7% → monitorear'},
+  661248:{cause:'ok',    trend:'↑↑', signal:'Bocado Salumeria: nuevo · Turbo ya supera regular en Jun · excelente'},
+};
+
+const CAUSE_META={
+  ok:   {lbl:'✅ Bien ejecutado',       cls:'ct-ok'},
+  ally: {lbl:'⚠️ Aliado no prioriza',   cls:'ct-ally'},
+  ops:  {lbl:'🔧 Problema de calidad',  cls:'ct-ops'},
+  brand:{lbl:'📉 Declive de marca',     cls:'ct-brand'},
+  ava:  {lbl:'🔴 AVA / Disponibilidad', cls:'ct-ava'},
+  e2e:  {lbl:'⏱️ E2E alto',             cls:'ct-e2e'},
+  new:  {lbl:'🆕 Nuevo',                cls:'ct-new'},
+};
+
+const COLORS=['#FF6900','#3B82F6','#22C55E','#EF4444','#8B5CF6','#F59E0B','#EC4899','#14B8A6','#64748B','#F97316','#06B6D4','#84CC16','#A855F7','#EF4444','#0EA5E9','#D97706','#6366F1','#10B981','#F43F5E','#71717A'];
+const IDS=Object.keys(BRANDS).map(Number);
+
+function gmvSum(id,y1,m1,y2,m2){
+  let s=0,d=T[id]||[];
+  for(let i=0;i<18;i++){
+    const y=i<6?2025:(i<12?2025:2026);
+    const m=i<12?(i%12)+1:(i-12)+1;
+    if(((y>y1)||(y===y1&&m>=m1))&&((y<y2)||(y===y2&&m<=m2))&&d[i]!=null)s+=d[i];
+  }
+  return s;
+}
+
+function peakInfo(id){
+  const d=T[id]||[];
+  let pv=0,pi=-1;
+  d.forEach((v,i)=>{if(v!=null&&v>pv){pv=v;pi=i;}});
+  return {val:pv,lbl:pi>=0?LBLS[pi]:'—',idx:pi};
+}
+
+function partPct(id,idx){
+  const daddy=BRANDS[id].daddy;
+  const tv=T[id]?.[idx];
+  const tot=(TOT[daddy]||[])[idx];
+  if(!tv||!tot)return null;
+  return Math.round(tv/tot*1000)/10;
+}
+
+// Sort brands by H1 2026 GMV
+IDS.sort((a,b)=>gmvSum(b,2026,1,2026,6)-gmvSum(a,2026,1,2026,6));
+
+// ===== BUILD BRAND GRID =====
+const grid=document.getElementById('brandGrid');
+let chartInst=null;
+
+IDS.forEach((id,ci)=>{
+  const b=BRANDS[id];
+  const g26=gmvSum(id,2026,1,2026,6);
+  const g25=gmvSum(id,2025,1,2025,6);
+  const pk=peakInfo(id);
+  const jun26=T[id]?.[17]??0;
+  const pctFromPeak=pk.val>0?Math.round((jun26-pk.val)/pk.val*100):null;
+  const yoy=g25>0?Math.round((g26-g25)/g25*100):null;
+  const d=DIAG[id];
+  const partJun=partPct(id,17);
+
+  const trendCls=d.trend.includes('↑')?'pg':d.trend.includes('↓')?'pr':'py';
+
+  const el=document.createElement('div');
+  el.className='bc';
+  el.dataset.id=id;
+  el.innerHTML=`
+    <div class="bc-top">
+      <div class="bc-name">${b.name}</div>
+      <span class="pill ${trendCls}">${d.trend}</span>
+    </div>
+    <div class="bc-body">
+      <div class="bc-val">$${Math.round(g26/1000)}k</div>
+      <div class="bc-sub">H1 2026 · ${yoy!=null?(yoy>=0?'<span class="pos">+'+yoy+'% YoY</span>':'<span class="neg">'+yoy+'% YoY</span>'):'<span class="neu">Nuevo 2026</span>'}</div>
+      <div class="bc-bar-bg"><div class="bc-bar" style="width:${partJun!=null?Math.min(partJun,100):0}%"></div></div>
+      <div class="bc-pct">${partJun!=null?partJun+'% part. Jun 2026':'—'}</div>
+    </div>`;
+  el.addEventListener('click',()=>selectBrand(id));
+  grid.appendChild(el);
+});
+
+let selId=null;
+function selectBrand(id){
+  selId=id;
+  document.querySelectorAll('.bc').forEach(c=>c.classList.toggle('sel',parseInt(c.dataset.id)===id));
+
+  const b=BRANDS[id];
+  const daddy=b.daddy;
+  const turboData=T[id]||[];
+  const totalData=TOT[daddy]||[];
+  const parts=LBLS.map((_,i)=>partPct(id,i));
+  const pk=peakInfo(id);
+  const d=DIAG[id];
+  const cm=CAUSE_META[d.cause]||CAUSE_META.ok;
+
+  document.getElementById('chartTitle').textContent=b.name+' · GMV Turbo 18 Meses (USD)';
+  document.getElementById('chartSub').textContent='Barras naranjas = GMV Turbo · Barras grises = GMV regular+Turbo total · Línea azul = % participación Turbo';
+
+  if(chartInst)chartInst.destroy();
+  chartInst=new Chart(document.getElementById('trendChart'),{
+    data:{
+      labels:LBLS,
+      datasets:[
+        {type:'bar',label:'GMV Total Marca',data:totalData,backgroundColor:'rgba(209,213,219,0.45)',borderColor:'rgba(209,213,219,0.7)',borderWidth:1,yAxisID:'y'},
+        {type:'bar',label:'GMV Turbo',data:turboData,backgroundColor:'rgba(255,105,0,0.85)',borderColor:'#FF6900',borderWidth:1,yAxisID:'y'},
+        {type:'line',label:'Part. Turbo %',data:parts,borderColor:'#3B82F6',backgroundColor:'rgba(59,130,246,0.08)',borderWidth:2,pointRadius:3,tension:.3,fill:false,yAxisID:'y2',spanGaps:true},
+      ]
+    },
+    options:{
+      responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'top',labels:{font:{size:10}}},
+        annotation:{annotations:{peak:{type:'line',xMin:pk.idx,xMax:pk.idx,borderColor:'rgba(239,68,68,0.6)',borderWidth:2,borderDash:[4,4],label:{content:'Pico '+pk.lbl,display:true,color:'#EF4444',font:{size:9}}}}}},
+      scales:{
+        y:{position:'left',grid:{color:'#f1f5f9'},ticks:{callback:v=>'$'+Math.round(v/1000)+'k',font:{size:9}}},
+        y2:{position:'right',grid:{display:false},ticks:{callback:v=>v+'%',font:{size:9}},max:100,min:0}
+      }
+    }
+  });
+
+  // Detail panel
+  const g26=gmvSum(id,2026,1,2026,6);
+  const g25=gmvSum(id,2025,1,2025,6);
+  const jun26=T[id]?.[17]??0;
+  const ops=OPS[id]||[];
+  const [dr1,av1,e1,p1,dr6,av6,e6,p6,wt6]=ops;
+  const partJun=parts[17];
+  const partAvg=parts.filter(p=>p!=null);
+  const avgPart=partAvg.length?Math.round(partAvg.reduce((a,x)=>a+x,0)/partAvg.length*10)/10:null;
+  const allVals=turboData.filter(v=>v!=null);
+  const maxV=Math.max(...allVals),minV=Math.min(...allVals);
+  const volatility=maxV>0?Math.round((maxV-minV)/maxV*100):null;
+
+  const pctFromPeak=pk.val>0?Math.round((jun26-pk.val)/pk.val*100):null;
+
+  document.getElementById('detailPanel').innerHTML=`
+    <h3>${b.name} <span class="peak-badge">📌 Pico: ${pk.lbl} $${Math.round(pk.val/1000)}k</span></h3>
+    <div style="margin:6px 0"><span class="ct ${cm.cls}">${cm.lbl}</span></div>
+    <div class="stats-grid">
+      <div>
+        <div class="stat-row"><span class="stat-lbl">GMV Turbo H1 2026</span><span class="stat-val">$${Math.round(g26/1000)}k</span></div>
+        <div class="stat-row"><span class="stat-lbl">GMV Turbo H1 2025</span><span class="stat-val">${g25>0?'$'+Math.round(g25/1000)+'k':'—'}</span></div>
+        <div class="stat-row"><span class="stat-lbl">YoY H1</span><span class="stat-val ${g25>0&&g26>=g25?'pos':'neg'}">${g25>0?(g26>=g25?'+':'')+Math.round((g26-g25)/g25*100)+'%':'Nuevo 2026'}</span></div>
+        <div class="stat-row"><span class="stat-lbl">Jun 2026 vs Pico</span><span class="stat-val ${pctFromPeak>=0?'pos':'neg'}">${pctFromPeak!=null?pctFromPeak+'%':'—'}</span></div>
+      </div>
+      <div>
+        <div class="stat-row"><span class="stat-lbl">Part. Turbo Jun 2026</span><span class="stat-val">${partJun!=null?partJun+'%':'—'}</span></div>
+        <div class="stat-row"><span class="stat-lbl">Part. Turbo promedio</span><span class="stat-val">${avgPart!=null?avgPart+'%':'—'}</span></div>
+        <div class="stat-row"><span class="stat-lbl">Pico histórico</span><span class="stat-val">${pk.lbl} · $${Math.round(pk.val/1000)}k</span></div>
+        <div class="stat-row"><span class="stat-lbl">Volatilidad 18m</span><span class="stat-val ${(volatility||0)>50?'neg':'neu'}">${volatility!=null?volatility+'%':'—'}</span></div>
+      </div>
+    </div>
+    <div style="margin-top:8px;font-size:11px;font-weight:700;color:var(--mid);margin-bottom:5px">OPS (Ene 2026 → Jun 2026)</div>
+    <div class="ops-row">
+      <div class="ops-box">
+        <div class="ob-lbl">Defect Rate</div>
+        <div class="ob-val" style="color:${dr6>4?'var(--red)':dr6>2.5?'var(--orange)':'var(--green)'}">${dr6!=null?dr6+'%':'—'}</div>
+        <div class="ob-trend ${dr6&&dr1&&dr6>dr1?'neg':'pos'}">${dr6&&dr1?(dr6>dr1?'↑ empeoró':'↓ mejoró'):'—'}</div>
+      </div>
+      <div class="ops-box">
+        <div class="ob-lbl">AVA %</div>
+        <div class="ob-val" style="color:${av6<85?'var(--red)':av6<92?'var(--orange)':'var(--green)'}">${av6!=null?av6+'%':'—'}</div>
+        <div class="ob-trend ${av6&&av1&&av6<av1?'neg':'pos'}">${av6&&av1?(av6<av1?'↓ bajó':'↑ subió'):'—'}</div>
+      </div>
+      <div class="ops-box">
+        <div class="ob-lbl">E2E (min)</div>
+        <div class="ob-val" style="color:${e6>21?'var(--red)':e6>18?'var(--orange)':'var(--green)'}">${e6!=null?e6:'—'}</div>
+        <div class="ob-trend ${e6&&e1&&e6>e1?'neg':'pos'}">${e6&&e1?(e6>e1?'↑ subió':'↓ bajó'):'—'}</div>
+      </div>
+      <div class="ops-box">
+        <div class="ob-lbl">Wait Tienda</div>
+        <div class="ob-val" style="color:${wt6>4?'var(--red)':wt6>2.5?'var(--orange)':'var(--green)'}">${wt6!=null?wt6+'m':'—'}</div>
+        <div class="ob-trend neu">${wt6!=null?'Jun 2026':'—'}</div>
+      </div>
+    </div>
+    <div style="margin-top:10px;background:var(--bg);border-radius:6px;padding:9px 11px;font-size:11px;color:#374151;line-height:1.65">
+      <strong>Señal clave:</strong> ${d.signal}
+    </div>`;
+}
+
+// ===== H1 COMPARE CHART =====
+const compareLabels=IDS.map(id=>BRANDS[id].name.replace(' Turbo',''));
+const compare25=IDS.map(id=>gmvSum(id,2025,1,2025,6));
+const compare26=IDS.map(id=>gmvSum(id,2026,1,2026,6));
+new Chart(document.getElementById('compareChart'),{
+  type:'bar',
+  data:{labels:compareLabels,datasets:[
+    {label:'H1 2025',data:compare25,backgroundColor:'rgba(148,163,184,0.7)',borderRadius:3},
+    {label:'H1 2026',data:compare26,backgroundColor:'rgba(255,105,0,0.85)',borderRadius:3},
+  ]},
+  options:{
+    responsive:true,maintainAspectRatio:false,
+    plugins:{legend:{position:'top',labels:{font:{size:10}}}},
+    scales:{
+      x:{ticks:{font:{size:9},maxRotation:45}},
+      y:{ticks:{callback:v=>'$'+Math.round(v/1000)+'k',font:{size:9}},grid:{color:'#f1f5f9'}}
+    }
+  }
+});
+
+// ===== PARTICIPATION CHART =====
+let partChartInst=null;
+let partView='all';
+function buildPartChart(view){
+  const filtered=IDS.filter(id=>{
+    const jun=partPct(id,17);
+    if(view==='high')return jun!=null&&jun>=30;
+    if(view==='low')return jun!=null&&jun<15;
+    return true;
+  });
+  const datasets=filtered.map((id,ci)=>({
+    label:BRANDS[id].name,
+    data:LBLS.map((_,i)=>partPct(id,i)),
+    borderColor:COLORS[ci%COLORS.length],
+    backgroundColor:'transparent',
+    borderWidth:2,pointRadius:2,tension:.3,spanGaps:true,
+  }));
+  if(partChartInst)partChartInst.destroy();
+  partChartInst=new Chart(document.getElementById('partChart'),{
+    type:'line',data:{labels:LBLS,datasets},
+    options:{responsive:true,maintainAspectRatio:false,
+      plugins:{legend:{position:'right',labels:{font:{size:9},boxWidth:12}}},
+      scales:{
+        y:{min:0,max:105,ticks:{callback:v=>v+'%',font:{size:9}},grid:{color:'#f1f5f9'}},
+        x:{ticks:{font:{size:9}}}
+      }
+    }
+  });
+}
+buildPartChart('all');
+function setPartView(v){
+  partView=v;
+  document.querySelectorAll('.ps-btn').forEach(b=>{b.classList.toggle('on',b.getAttribute('onclick').includes("'"+v+"'"))});
+  buildPartChart(v);
+}
+
+// ===== PART TABLE =====
+const ptbl=document.getElementById('partTable');
+const sortedByPart=[...IDS].sort((a,b)=>(partPct(b,17)??-1)-(partPct(a,17)??-1));
+ptbl.innerHTML=`<thead><tr><th>Marca</th><th>Part. Ene 2025</th><th>Part. Jun 2025</th><th>Part. Ene 2026</th><th>Part. Jun 2026</th><th>Tendencia</th><th>Causa</th></tr></thead>`;
+const ptbd=document.createElement('tbody');
+sortedByPart.forEach(id=>{
+  const b=BRANDS[id];
+  const p0=partPct(id,0),p5=partPct(id,5),p12=partPct(id,12),p17=partPct(id,17);
+  const d=DIAG[id];
+  const cm=CAUSE_META[d.cause]||CAUSE_META.ok;
+  const pFmt=(v)=>v!=null?`${v}%`:'—';
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><strong>${b.name}</strong></td>
+    <td>${pFmt(p0)}</td><td>${pFmt(p5)}</td><td>${pFmt(p12)}</td>
+    <td><strong>${pFmt(p17)}</strong></td>
+    <td class="${d.trend.includes('↑')?'pos':d.trend.includes('↓')?'neg':'neu'}" style="font-size:15px">${d.trend}</td>
+    <td><span class="ct ${cm.cls}">${cm.lbl}</span></td>`;
+  ptbd.appendChild(tr);
+});
+ptbl.appendChild(ptbd);
+
+// ===== OPS TABLE =====
+const opsTbl=document.getElementById('opsTable');
+opsTbl.innerHTML=`<thead><tr><th>Marca</th><th>Defect Rate</th><th>AVA %</th><th>E2E (min)</th><th>Prep (min)</th><th>Wait Tienda</th><th>Estado</th></tr></thead>`;
+const opsTbd=document.createElement('tbody');
+IDS.forEach(id=>{
+  const b=BRANDS[id];
+  const ops=OPS[id]||[];
+  const [,,,, dr6,av6,e6,p6,wt6]=ops;
+  function cell(v,threshGood,threshWarn,suffix=''){
+    if(v==null)return '<span class="cell-na">—</span>';
+    const c=v<=threshGood?'cell-good':v<=threshWarn?'cell-warn':'cell-bad';
+    return `<span class="${c}">${v}${suffix}</span>`;
+  }
+  const drCell=cell(dr6,2.5,4,'%');
+  const avaCell=dr6!=null?`<span class="${av6>=92?'cell-good':av6>=85?'cell-warn':'cell-bad'}">${av6}%</span>`:'<span class="cell-na">—</span>';
+  const e2eCell=cell(e6,18,21,' min');
+  const prepCell=cell(p6,8,12,' min');
+  const wtCell=cell(wt6,2.5,4,' min');
+  const d=DIAG[id];
+  const cm=CAUSE_META[d.cause]||CAUSE_META.ok;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><strong>${b.name}</strong></td><td>${drCell}</td><td>${avaCell}</td><td>${e2eCell}</td><td>${prepCell}</td><td>${wtCell}</td><td><span class="ct ${cm.cls}">${cm.lbl}</span></td>`;
+  opsTbd.appendChild(tr);
+});
+opsTbl.appendChild(opsTbd);
+
+// ===== OPS TREND TABLE =====
+const opsTrdTbl=document.getElementById('opsTrendTable');
+opsTrdTbl.innerHTML=`<thead><tr><th>Marca</th><th>Defect Rate Ene→Jun 26</th><th>AVA % Ene→Jun 26</th><th>E2E Ene→Jun 26</th><th>Prep Ene→Jun 26</th><th>Veredicto</th></tr></thead>`;
+const opsTrdBd=document.createElement('tbody');
+IDS.forEach(id=>{
+  const b=BRANDS[id];
+  const ops=OPS[id]||[];
+  const [dr1,av1,e1,p1,dr6,av6,e6,p6]=ops;
+  if(!dr6)return;
+  const emo=(curr,prev,reverseGood=false)=>{
+    if(!prev)return '—';
+    const better=reverseGood?(curr<prev):(curr>prev);
+    const worse=reverseGood?(curr>prev):(curr<prev);
+    if(better)return `<span class="pos">🟢 ${prev}→${curr}</span>`;
+    if(worse)return `<span class="neg">🔴 ${prev}→${curr}</span>`;
+    return `<span class="neu">⚪ ${curr}</span>`;
+  };
+  const drTrend=emo(dr6,dr1,true);
+  const avaTrend=emo(av6,av1);
+  const e2eTrend=emo(e6,e1,true);
+  const prepTrend=emo(p6,p1,true);
+  let verdict='';
+  let issues=[];
+  if(dr6>4)issues.push('defect alto');
+  if(av6<85)issues.push('AVA baja');
+  if(e6>21)issues.push('E2E alto');
+  if(issues.length===0)verdict='<span class="pos">✅ OK</span>';
+  else verdict=`<span class="neg">⚠️ ${issues.join(' · ')}</span>`;
+  const tr=document.createElement('tr');
+  tr.innerHTML=`<td><strong>${b.name}</strong></td><td>${drTrend}</td><td>${avaTrend}</td><td>${e2eTrend}</td><td>${prepTrend}</td><td>${verdict}</td>`;
+  opsTrdBd.appendChild(tr);
+});
+opsTrdTbl.appendChild(opsTrdBd);
+
+// ===== PORTFOLIO TOTAL =====
+const PTOT = LBLS.map((_, i) => IDS.reduce((sum, id) => sum + (T[id]?.[i] ?? 0), 0));
+
+// KPIs
+const pH1_25 = PTOT.slice(0,6).reduce((a,b)=>a+b,0);
+const pH2_25 = PTOT.slice(6,12).reduce((a,b)=>a+b,0);
+const pH1_26 = PTOT.slice(12,18).reduce((a,b)=>a+b,0);
+const pJun25 = PTOT[5];
+const pJun26 = PTOT[17];
+const pPeakVal = Math.max(...PTOT);
+const pPeakLbl = LBLS[PTOT.indexOf(pPeakVal)];
+const pYoY = Math.round((pH1_26 - pH1_25) / pH1_25 * 100);
+const pJunYoY = Math.round((pJun26 - pJun25) / pJun25 * 100);
+const fmt = v => v>=1000000 ? '$'+(v/1000000).toFixed(2)+'M' : '$'+Math.round(v/1000)+'k';
+
+document.getElementById('portfolioKpis').innerHTML = `
+  <div class="kpi"><div class="lbl">H1 2025 Total</div><div class="val">${fmt(pH1_25)}</div><div class="note neu">ene–jun 2025</div></div>
+  <div class="kpi"><div class="lbl">H2 2025 Total</div><div class="val">${fmt(pH2_25)}</div><div class="note pos">jul–dic 2025</div></div>
+  <div class="kpi"><div class="lbl">H1 2026 Total</div><div class="val">${fmt(pH1_26)}</div><div class="note pos">ene–jun 2026</div></div>
+  <div class="kpi"><div class="lbl">YoY H1 2025→2026</div><div class="val pos">+${pYoY}%</div><div class="note pos">mismo semestre</div></div>
+  <div class="kpi"><div class="lbl">Jun 26 vs Jun 25</div><div class="val pos">+${pJunYoY}%</div><div class="note pos">comparación correcta</div></div>
+  <div class="kpi"><div class="lbl">Pico Portafolio</div><div class="val ora">${pPeakLbl}</div><div class="note neu">${fmt(pPeakVal)}</div></div>
+`;
+
+// 18m bar chart
+const ptotColors = [
+  ...Array(6).fill('rgba(148,163,184,0.85)'),
+  ...Array(6).fill('rgba(59,130,246,0.85)'),
+  ...Array(6).fill('rgba(255,105,0,0.9)'),
+];
+new Chart(document.getElementById('portfolioChart'), {
+  type: 'bar',
+  data: {
+    labels: LBLS,
+    datasets: [{
+      label: 'GMV Total Portafolio',
+      data: PTOT,
+      backgroundColor: ptotColors,
+      borderRadius: 4,
+      borderSkipped: 'bottom',
+    }]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => fmt(ctx.parsed.y) } }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 9 }, maxRotation: 0 } },
+      y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => fmt(v), font: { size: 9 } } }
+    }
+  }
+});
+
+// H1 YoY comparison
+const monthsH1 = ['Enero','Febrero','Marzo','Abril','Mayo','Junio'];
+new Chart(document.getElementById('portfolioYoY'), {
+  type: 'bar',
+  data: {
+    labels: monthsH1,
+    datasets: [
+      { label: '2025', data: PTOT.slice(0,6), backgroundColor: 'rgba(148,163,184,0.85)', borderRadius: 4, borderSkipped: 'bottom' },
+      { label: '2026', data: PTOT.slice(12,18), backgroundColor: 'rgba(255,105,0,0.9)', borderRadius: 4, borderSkipped: 'bottom' },
+    ]
+  },
+  options: {
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { position: 'top', labels: { font: { size: 10 } } },
+      tooltip: {
+        callbacks: {
+          label: ctx => {
+            const yoy = ctx.datasetIndex === 1 ? ' (+' + Math.round((ctx.parsed.y - PTOT.slice(0,6)[ctx.dataIndex]) / PTOT.slice(0,6)[ctx.dataIndex] * 100) + '% YoY)' : '';
+            return ctx.dataset.label + ': ' + fmt(ctx.parsed.y) + yoy;
+          }
+        }
+      }
+    },
+    scales: {
+      x: { grid: { display: false }, ticks: { font: { size: 10 } } },
+      y: { grid: { color: '#f1f5f9' }, ticks: { callback: v => fmt(v), font: { size: 9 } } }
+    }
+  }
+});
+
+// Jun 2026 contribution pie/bar (horizontal)
+const junContrib = IDS.map(id => ({ name: BRANDS[id].name, val: T[id]?.[17] ?? 0 }))
+  .filter(x => x.val > 0)
+  .sort((a, b) => b.val - a.val);
+new Chart(document.getElementById('portfolioPie'), {
+  type: 'bar',
+  data: {
+    labels: junContrib.map(x => x.name.replace(' Turbo','').replace(' Turbo 1','').replace(' Turbo 2','')),
+    datasets: [{
+      label: 'GMV Jun 2026',
+      data: junContrib.map(x => x.val),
+      backgroundColor: junContrib.map((_, i) => COLORS[i % COLORS.length]),
+      borderRadius: 4,
+      borderSkipped: 'bottom',
+    }]
+  },
+  options: {
+    indexAxis: 'y',
+    responsive: true, maintainAspectRatio: false,
+    plugins: {
+      legend: { display: false },
+      tooltip: { callbacks: { label: ctx => fmt(ctx.parsed.x) + ' (' + Math.round(ctx.parsed.x / pJun26 * 100) + '%)' } }
+    },
+    scales: {
+      x: { grid: { color: '#f1f5f9' }, ticks: { callback: v => fmt(v), font: { size: 9 } } },
+      y: { grid: { display: false }, ticks: { font: { size: 10 } } }
+    }
+  }
+});
+
+// ===== TAB SWITCH =====
+function tab(id){
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.remove('on'));
+  document.querySelectorAll('.pane').forEach(p=>p.classList.remove('on'));
+  event.target.classList.add('on');
+  document.getElementById('pane-'+id).classList.add('on');
+}
+
+// Auto-select first brand
+selectBrand(IDS[0]);
+</script>
+</body>
+</html>
